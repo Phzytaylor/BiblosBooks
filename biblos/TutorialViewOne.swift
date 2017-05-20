@@ -9,9 +9,9 @@
 import UIKit
 import BWWalkthrough
 
-//var modelName = UIDevice.current.modelName
+var modelName = UIDevice.current.modelName
 
-var modelName = Devices.IPhoneSE
+//var modelName = Devices.IPhoneSE
 
 class TutorialViewOne: BWWalkthroughPageViewController{
 

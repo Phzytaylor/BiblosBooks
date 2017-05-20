@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import BWWalkthrough
 
-//var modelName = UIDevice.current.modelName
+
 
 
 

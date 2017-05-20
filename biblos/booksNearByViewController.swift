@@ -15,7 +15,7 @@ import Firebase
 class booksNearByViewController: UIViewController, UINavigationControllerDelegate, UINavigationBarDelegate, CLLocationManagerDelegate, GADBannerViewDelegate {
     
   
- //  var modelName = UIDevice.current.modelName
+  var modelName = UIDevice.current.modelName
    
     let manager = CLLocationManager()
     

@@ -16,8 +16,8 @@ class ViewController: UIViewController,FBSDKLoginButtonDelegate, UIImagePickerCo
    
 
     
-var modelName = Devices.IPadAir
-    
+//var modelName = Devices.IPhone6
+var modelName = UIDevice.current.modelName
     
     public func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         
@@ -156,9 +156,18 @@ var modelName = Devices.IPadAir
         
         let imageView = UIImageView()
         
-        imageView.image = UIImage(named: "filler.jpg")
+        imageView.image = UIImage(named: "filler.jpg")?.circleMasked
+        
+        
+        
+        
+        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        
+        
+        
+        
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         imageView.isUserInteractionEnabled = true
         
@@ -414,6 +423,7 @@ var modelName = Devices.IPadAir
         if modelName == Devices.IPhone5 || modelName == Devices.IPhone5S || modelName == Devices.IPhone6S || modelName == Devices.IPhone5C || modelName == Devices.IPhone6 || modelName == Devices.IPhone6S || modelName == Devices.IPhone7 || modelName == Devices.IPhoneSE{
             
             
+            
             //need x, y, width, height constraints
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             //profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -30).isActive = true
@@ -436,7 +446,7 @@ var modelName = Devices.IPadAir
             profileImageView.widthAnchor.constraint(equalToConstant: 130).isActive = true
             profileImageView.heightAnchor.constraint(equalToConstant: 130).isActive = true
         
-        
+            
         }
 
         if modelName == Devices.Other{
@@ -451,6 +461,7 @@ var modelName = Devices.IPadAir
             
             profileImageView.widthAnchor.constraint(equalToConstant: 130).isActive = true
             profileImageView.heightAnchor.constraint(equalToConstant: 130).isActive = true
+            
             
             
 
@@ -547,7 +558,9 @@ var modelName = Devices.IPadAir
         }
         
         if let selectedImage = selectedImageFromPicker {
-            profileImageView.image = selectedImage
+            profileImageView.image = selectedImage.circleMasked
+            
+            
         }
         
         dismiss(animated: true, completion: nil)
@@ -930,6 +943,7 @@ var modelName = Devices.IPadAir
        
       view.addSubview(passWordResetButt)
       view.addSubview(aivLoadingSpinner)
+    
         
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()

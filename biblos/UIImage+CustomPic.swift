@@ -17,7 +17,7 @@ extension UIImage {
         imageView.contentMode = UIViewContentMode.scaleAspectFill
         imageView.image = self
         imageView.layer.cornerRadius = square.width/2
-        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderColor = UIColor.blue.cgColor
         imageView.layer.borderWidth = 5
         imageView.layer.masksToBounds = true
         UIGraphicsBeginImageContext(imageView.bounds.size)

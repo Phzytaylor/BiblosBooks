@@ -19,7 +19,13 @@ let manager = CLLocationManager()
 
 
 class UploadViewController: UIViewController,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate {
+    @IBOutlet weak var chooseAPicLabel: UILabel!
     
+    @IBOutlet weak var upLoadButton: UIButton!
+    
+    @IBOutlet weak var AgeRestrictedLabel: UILabel!
+    
+    @IBOutlet weak var allAgeLabel: UILabel!
     var userPushID = ""
     var bookRating = "Age Restricted"
     
@@ -52,6 +58,8 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     var usersPhoto: String!
     
     var usersPhotoChoice: String!
+    
+    
     
     
     @IBAction func buttonClicked(_ sender: AnyObject) {
@@ -265,7 +273,7 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     @IBOutlet weak var bookPic: UIImageView!
     
     
-    @IBOutlet weak var picTaker: UIButton!
+ 
     
     
     @IBOutlet weak var bookTitle: UITextField!
@@ -650,6 +658,9 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
                             self.bookTitle.text = nil
                             self.locationField.text = nil
                             
+                            self.chooseAPicLabel.isHidden = false
+                            
+                            
                             manager.stopUpdatingLocation()
                             
                             
@@ -891,13 +902,18 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     let bookRef = FIRDatabase.database().reference().child("books")
  
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [AnyHashable: Any]!) {
+   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [AnyHashable: Any]!) {
         imagePicked.image = image
         self.dismiss(animated: true, completion: nil);
         
         
-        
-        switch picTaker.tag {
+    imagePicked.image = image
+    
+    
+    chooseAPicLabel.isHidden = true
+    
+    
+        /*switch picker.tag {
         case 1:
             var rotatedPhoto = imagePicked.image?.imageRotatedByDegrees(90, flip: false)
             
@@ -906,7 +922,7 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
             
         default:
             imagePicked.image = image
-        }
+        }*/
         
         
         
@@ -917,7 +933,7 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     }
     
     
-    @IBAction func takePhoto(_ sender: AnyObject) {
+  /*  @IBAction func takePhoto(_ sender: AnyObject) {
         
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
             let imagePicker = UIImagePickerController()
@@ -937,11 +953,11 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
         }
         
         
-    }
+    } */
     
     
     
-    @IBAction func selectPhoto(_ sender: AnyObject) {
+ /*   @IBAction func selectPhoto(_ sender: AnyObject) {
         
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
             
@@ -959,7 +975,7 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
         
         
         
-    }
+    } */
     
     
     
@@ -1028,6 +1044,17 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        bookPic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pickCamorLib)))
+        bookPic.isUserInteractionEnabled = true
+        
+       upLoadButton.layer.cornerRadius = 5
+        
+       
+        AgeRestrictedLabel.layer.cornerRadius = 5
+        
+        allAgeLabel.layer.cornerRadius = 5
+        
          UIApplication.shared.statusBarStyle = .lightContent
         manager.delegate = self
         
@@ -1072,7 +1099,7 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
         NotificationCenter.default.addObserver(self, selector: #selector(UploadViewController.keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(UploadViewController.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil);
         
-        picTaker.tag = 1
+        //picTaker.tag = 1
         
         
         
@@ -1093,13 +1120,72 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
         // Do any additional setup after loading the view.
     }
     
+    func pickCamorLib () {
+    
+        
+        let refreshAlert = UIAlertController(title: "Upload", message: "Take a picure or select a photo.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        refreshAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction!) in
+           
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                
+                
+                imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
+                
+                
+                
+                imagePicker.allowsEditing = false
+                
+                
+                
+                
+                self.present(imagePicker, animated: true, completion: nil)
+                
+                
+                
+                
+                
+            }
+            
+        }))
+        
+        refreshAlert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction!) in
+            
+            
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
+                
+                self.imagePicker = UIImagePickerController()
+                self.imagePicker.delegate = self
+                self.imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary;
+                self.imagePicker.allowsEditing = false
+                self.present(self.imagePicker, animated: true, completion: nil)
+                
+                
+                
+                
+            }
+            
+            
+        }))
+        
+        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(refreshAlert, animated: true, completion: nil)
+    
+    
+    
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     
-    
+   
+
     
     
     
