@@ -52,7 +52,7 @@ class HomeViewController: UIViewController, GADBannerViewDelegate {
     
 var modelName = UIDevice.current.modelName
 
-   //var modelName = Devices.IPhone6
+   //var modelName = Devices.IPhone5
     
     
     

@@ -12,11 +12,15 @@ import Firebase
 import FirebaseAuth
 
 
-class ViewController: UIViewController,FBSDKLoginButtonDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController,FBSDKLoginButtonDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
    
+    
+    
+    
+    
 
     
-//var modelName = Devices.IPhone6
+//var modelName = Devices.IPhone5
 var modelName = UIDevice.current.modelName
     
     public func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
@@ -137,6 +141,7 @@ var modelName = UIDevice.current.modelName
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
+    var inputsContainerViewYPostionAnchor: NSLayoutConstraint?
     
     lazy var loginRegisterButton: UIButton = {
         
@@ -156,7 +161,9 @@ var modelName = UIDevice.current.modelName
         
         let imageView = UIImageView()
         
-        imageView.image = UIImage(named: "filler.jpg")?.circleMasked
+        imageView.image = UIImage(named: "addtext_com_MTgzMTQwMTI3NTg3.png")?.circleMasked
+        
+        
         
         
         
@@ -302,7 +309,7 @@ var modelName = UIDevice.current.modelName
     func setupInputsContainerView(){
     
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+      inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
             inputsContainerViewHeightAnchor?.isActive = true
@@ -637,7 +644,7 @@ var modelName = UIDevice.current.modelName
         
         
         
-        if profileImageView.image == UIImage(named: "filler.jpg"){
+        if profileImageView.image == UIImage(named: "addtext_com_MTgzMTQwMTI3NTg3.png"){
         
         
         
@@ -923,16 +930,26 @@ var modelName = UIDevice.current.modelName
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+    self.nameTextField.delegate = self
+        self.passwordTextField.delegate = self
+        self.emailTextField.delegate = self
+        
+        
         // Do any additional setup after loading the view, typically from a nib.
         
          UIApplication.shared.statusBarStyle = .lightContent
         //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
+        //let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
         
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         //tap.cancelsTouchesInView = false
         
-        view.addGestureRecognizer(tap)
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:))))
+        setupKeyboardObservers()
+        
+       // view.addGestureRecognizer(tap)
         
       view.addSubview(profileImageView)
       view.addSubview(loginRegisterSegmentedControl)
@@ -1063,11 +1080,58 @@ var modelName = UIDevice.current.modelName
     }
     
 
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
     
-    func dismissKeyboard() {
+    func handleKeyboardWillShow(_ notification: Notification) {
+        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        
+        
+       self.view.frame.origin.y = -(keyboardFrame?.height)!
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    func handleKeyboardWillHide(_ notification: Notification) {
+        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+        
+        print("I am free!")
+        
+        
+       self.view.frame.origin.y = 0
+        UIView.animate(withDuration: keyboardDuration!, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    
+    
+    /*func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        
+        
+        
+        inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         view.endEditing(true)
-    }    
+    } */
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true;
+    }
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         print ("user did log out")
     }

@@ -18,7 +18,7 @@ let manager = CLLocationManager()
 
 
 
-class UploadViewController: UIViewController,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate {
+class UploadViewController: UIViewController,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, UITextFieldDelegate {
     @IBOutlet weak var chooseAPicLabel: UILabel!
     
     @IBOutlet weak var upLoadButton: UIButton!
@@ -1045,6 +1045,14 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
         super.viewDidLoad()
         
         
+        self.bookTitle.delegate = self
+        
+        self.bookAuthor.delegate = self
+        
+         self.bookGenre.delegate = self
+        
+       self.bookComment.delegate = self
+        
         bookPic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pickCamorLib)))
         bookPic.isUserInteractionEnabled = true
         
@@ -1186,7 +1194,10 @@ class UploadViewController: UIViewController,UINavigationControllerDelegate, UII
     
    
 
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true;
+    }
     
     
     
